@@ -1,0 +1,48 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Objects.png" type="Texture" id=1]
+[ext_resource path="res://Bar.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Scripts/Barrel.gd" type="Script" id=3]
+[ext_resource path="res://Scripts/HitArea.gd" type="Script" id=4]
+
+[sub_resource type="CapsuleShape2D" id=1]
+radius = 1.93857
+height = 5.99149
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 5, 7 )
+
+[node name="Barrel" type="RigidBody2D"]
+mode = 2
+gravity_scale = 0.0
+linear_damp = 19.67
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0, -1 )
+rotation = 1.5708
+shape = SubResource( 1 )
+
+[node name="HitArea" type="Area2D" parent="."]
+script = ExtResource( 4 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitArea"]
+position = Vector2( 0, -6 )
+shape = SubResource( 2 )
+
+[node name="Objects" type="Sprite" parent="."]
+position = Vector2( 0, -5 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 10, 16 )
+
+[node name="HealthBar" parent="." instance=ExtResource( 2 )]
+margin_left = 6.0
+margin_top = 1.0
+margin_right = 20.0
+margin_bottom = 2.0
+rect_rotation = -90.0
+[connection signal="hit" from="HitArea" to="." method="_on_HitArea_hit"]

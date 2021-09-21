@@ -1,0 +1,49 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Scripts/Breakable.gd" type="Script" id=1]
+[ext_resource path="res://Scripts/HitArea.gd" type="Script" id=2]
+[ext_resource path="res://Objects.png" type="Texture" id=3]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 6, 6 )
+
+[sub_resource type="CapsuleShape2D" id=2]
+radius = 1.84786
+height = 10.0
+
+[node name="Breakable" type="RigidBody2D"]
+mode = 2
+gravity_scale = 0.0
+linear_damp = 53.301
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Beaker" type="Sprite" parent="."]
+visible = false
+position = Vector2( 0, -7 )
+texture = ExtResource( 3 )
+hframes = 2
+region_enabled = true
+region_rect = Rect2( 15, 1, 30, 14 )
+
+[node name="Computer" type="Sprite" parent="."]
+position = Vector2( 0, -6 )
+texture = ExtResource( 3 )
+hframes = 2
+region_enabled = true
+region_rect = Rect2( 15, 15, 18, 11 )
+
+[node name="HitArea" type="Area2D" parent="."]
+script = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitArea"]
+position = Vector2( 0, -6 )
+shape = SubResource( 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0, -2 )
+rotation = 1.5708
+shape = SubResource( 2 )
+[connection signal="hit" from="HitArea" to="." method="_on_HitArea_hit"]

@@ -1,0 +1,96 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://Scripts/Pipe.gd" type="Script" id=1]
+[ext_resource path="res://Scripts/HitArea.gd" type="Script" id=2]
+[ext_resource path="res://Objects.png" type="Texture" id=3]
+[ext_resource path="res://step.wav" type="AudioStream" id=4]
+[ext_resource path="res://Bar.tscn" type="PackedScene" id=5]
+
+[sub_resource type="Animation" id=1]
+resource_name = "Drip"
+length = 1.2
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.4, 0.8 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ 1, 2, 3 ]
+}
+tracks/1/type = "method"
+tracks/1/path = NodePath("../DripSound")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [ 0.0 ],
+"method": "play"
+} ]
+}
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 3.5, 8 )
+
+[sub_resource type="CapsuleShape2D" id=3]
+radius = 1.5
+height = 8.0
+
+[sub_resource type="AudioStreamRandomPitch" id=4]
+audio_stream = ExtResource( 4 )
+random_pitch = 1.67
+
+[node name="Pipe" type="StaticBody2D"]
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 2, -14 )
+texture = ExtResource( 3 )
+hframes = 4
+region_enabled = true
+region_rect = Rect2( 0, 90, 64, 28 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite"]
+anims/Drip = SubResource( 1 )
+
+[node name="HitArea" type="Area2D" parent="."]
+script = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitArea"]
+position = Vector2( -0.5, -10 )
+shape = SubResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( -0.5, -1.5 )
+rotation = 1.5708
+shape = SubResource( 3 )
+
+[node name="Spawn" type="Node2D" parent="."]
+position = Vector2( -10, 1 )
+
+[node name="DripSound" type="AudioStreamPlayer2D" parent="."]
+stream = SubResource( 4 )
+volume_db = -7.64
+pitch_scale = 4.0
+
+[node name="Bar" parent="." instance=ExtResource( 5 )]
+visible = false
+margin_left = 4.0
+margin_top = -3.0
+margin_right = 18.0
+margin_bottom = -2.0
+rect_rotation = -90.0
+max_value = 5.0
+value = 5.0
+[connection signal="hit" from="HitArea" to="." method="_on_HitArea_hit"]

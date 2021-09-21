@@ -1,0 +1,55 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Scripts/Fling.gd" type="Script" id=1]
+[ext_resource path="res://Objects.png" type="Texture" id=2]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 2.0
+
+[sub_resource type="Animation" id=2]
+resource_name = "Rotate"
+length = 0.4
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rotation_degrees")
+tracks/0/interp = 0
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 90.0, 180.0, 270.0 ]
+}
+
+[node name="Fling" type="Area2D" groups=[
+"Flings",
+]]
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+local_coords = false
+emission_shape = 1
+emission_sphere_radius = 1.0
+spread = 180.0
+initial_velocity = 32.26
+color = Color( 0.309804, 0.686275, 0.239216, 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+rotation = 4.71239
+texture = ExtResource( 2 )
+region_enabled = true
+region_rect = Rect2( 10, 0, 4, 4 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite"]
+autoplay = "Rotate"
+anims/Rotate = SubResource( 2 )
+[connection signal="area_entered" from="." to="." method="_on_area_collision"]
+[connection signal="body_entered" from="." to="." method="_on_body_collision"]
